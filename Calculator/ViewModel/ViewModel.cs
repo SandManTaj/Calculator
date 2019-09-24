@@ -5,11 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Windows.Input;
-using Calculator.Command;
+using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.CommandWpf;
 
 namespace Calculator.ViewModel
 {
-    public class ViewModel : INotifyPropertyChanged
+    public class ViewModel : ViewModelBase
     {
         public ICommand MySum { get; set; }
         public ICommand MyDifference { get; set; }
@@ -17,34 +18,25 @@ namespace Calculator.ViewModel
 
         public ICommand MyQuotient { get; set; }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void OnPropertyChanged(string propertyname)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyname));
-            }
-        }
-
         private string _number1;
         public string Number1
         {
             get { return _number1; }
-            set { _number1 = value; OnPropertyChanged("Number1"); }
+            set { _number1 = value; }
         }
 
         private string _number2;
         public string Number2
         {
             get { return _number2; }
-            set { _number2 = value; OnPropertyChanged("Number2"); }
+            set { _number2 = value; }
         }
 
         private string _result;
         public string Result
         {
             get { return _result; }
-            set { _result = value; OnPropertyChanged("Result"); }
+            set { _result = value; }
         }
 
         public ViewModel()
@@ -55,7 +47,7 @@ namespace Calculator.ViewModel
             MyQuotient = new RelayCommand(quotient, canexecute);
         }
 
-        private bool canexecute(object parameter)
+        private bool canexecute()
         {
             if (!string.IsNullOrEmpty(Number1) && !string.IsNullOrEmpty(Number2))
             {
@@ -64,21 +56,25 @@ namespace Calculator.ViewModel
             return false;
 
         }
-        private void sum(object parameter)
+        private void sum()
         {
             Result = (Convert.ToDouble(Number1) + Convert.ToDouble(Number2)).ToString();
+            RaisePropertyChanged("Result");
         }
-        private void difference(object parameter)
+        private void difference()
         {
             Result = (Convert.ToDouble(Number1) - Convert.ToDouble(Number2)).ToString();
+            RaisePropertyChanged("Result");
         }
-        private void product(object parameter)
+        private void product()
         {
             Result = (Convert.ToDouble(Number1) * Convert.ToDouble(Number2)).ToString();
+            RaisePropertyChanged("Result");
         }
-        private void quotient(object parameter)
+        private void quotient()
         {
             Result = (Convert.ToDouble(Number1) / Convert.ToDouble(Number2)).ToString();
+            RaisePropertyChanged("Result");
         }
 
     }
